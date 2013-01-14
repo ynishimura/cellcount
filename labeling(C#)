@@ -1,0 +1,55 @@
+
+ int labelno =1;
+ int[,] label = new int[src.Width, src.Height];
+
+ Stack<position> stack = new Stack<position>();
+
+
+ for(int y = 0; y < dst.Height; y++ )
+  {
+    for(int x = 0; x < dst.Width; x++)
+    {
+      if(Cv.GetReal2D(dst, y , x) == 255 && label[x,y] == 0)
+      //getPixel = white and empty in box
+
+      {
+        stack.Push(new position(x,y));
+        //postion white pixel in stack
+
+        while(stack.Count != 0)
+        {
+          position Pos = stack.Pop();
+          //int string position? out in stack
+
+
+          if(label[Pos.x Pos.y] == 0)
+          {
+            label[Pos.x, Pos.y] = labelno;
+            Cv.SetReal2D(dst2, Pos.y, Pos.x, labelno);
+            //setpixel
+
+            //right
+            if(Pos.x + 1 < dst.Width && Cv.GetReal2D(dst, Pos.y, Pos.x + 1) == 255 )
+            {
+              stack.Push(new position(Pos.x + 1, Pos.y ));
+              //pixel in stack
+            }
+            //left
+            if(Pos.x - 1 >= 0 && Cv.GetReal2D(dst, Pos.y, Pos.x - 1) == 255)
+            {
+              stack.Push(new position(Pos.x - 1, Pos.y));
+            }
+            //top
+            if(Pos.y - 1 >= 0 && Cv.GetReal2D(dst, Pos.y - 1, Pos.x) == 255 )
+            {
+              stack.Push(new position(Pos.x, Pos.y - 1));
+            }
+            //buttom
+            if(Pos.y + 1 < dst.Height && Cv.GetReal2D(dst, Pos.y + 1, Pos.x) == 255)
+            {
+              stack.Push(new position(Pos.x, Pos.y + 1));
+            }
+          }
+        }
+        labelno ++
+      }
