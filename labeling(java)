@@ -1,0 +1,57 @@
+int[][] label = new int[imageWidth][imageHeight];
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        //LinkedList<Integer> list = new LinkedList<Integer>();
+        int labelno = 1;
+        int x_pos = 0;
+        int y_pos = 0;
+
+        for(int x = 0; x < value.getWidth(); x++){
+          for(int y = 0; y < value.getHeight(); y++){
+            //float red = value.getPixel(x,y,0);
+            //float green = value.getPixel(x,y,1);
+            //float blue = value.getPixel(x,y,2);
+
+            if(value.getPixel(x,y,0) >= 0.9 && label[x][y] == 0 ){
+              list.add(x);
+              list.add(y);
+                while(list.size() != 0){
+                x_pos = list.get(0);
+                y_pos = list.get(1);
+
+                if(list.size() <= 2){
+                  x_pos = list.get(0);
+                  y_pos = list.get(1);
+                  list.clear();
+                }
+                else if (list.size() > 2){
+                  list.remove(0);
+                  list.remove(0);
+                }
+                if(label[x_pos][y_pos] == 0 ){
+                  label[x_pos][y_pos] = labelno;
+                  //right
+                  if(x_pos + 1 < imageWidth && value.getPixel(x_pos + 1,y_pos,0) >= 0.9){
+                    list.add(x_pos + 1);
+                    list.add(y_pos);
+                  }
+                  //left
+                  if(x_pos - 1 >= 0  && value.getPixel(x_pos - 1,y_pos,0) >= 0.9){
+                    list.add(x_pos -1);
+                    list.add(y_pos);
+                  }
+                  //top
+                  if(y_pos - 1 >= 0 && value.getPixel(x_pos,y_pos - 1,0) >= 0.9){
+                    list.add(x_pos);
+                    list.add(y_pos - 1);
+                  }
+                  //bottom
+                  if(y_pos + 1 < imageHeight && value.getPixel(x_pos,y_pos + 1,0) >= 0.9){
+                    list.add(x_pos);
+                    list.add(y_pos + 1);
+                  }
+                }
+              }
+              labelno = labelno + 1 ;
+            }
+            }
+        }
